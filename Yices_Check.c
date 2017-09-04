@@ -68,6 +68,7 @@ int Yices_Check(struct Para_Struct* para_head, struct Cons_Struct* cons_info, in
 
     }
 
+    //set range
     para_pointer = para_head;
     for(int para_counter = 0; para_counter < para_num; para_counter++){
 
@@ -113,8 +114,7 @@ int Yices_Check(struct Para_Struct* para_head, struct Cons_Struct* cons_info, in
     //check distinguishability
     struct Dis_Pair* dis_head;
     clock_t dis_check_time_start = clock();
-    
-    //dis_head = Check_Dis(ctx, parameters, valid_head, num_dis_point, cons_flag);
+    dis_head = Check_Dis(ctx, parameters, set_head);
     clock_t dis_check_time_stop = clock();
     printf("\n\nDis Check Runtime: %lf[s]\n\n", (double)(dis_check_time_stop - dis_check_time_start)/CLOCKS_PER_SEC);
 
@@ -125,7 +125,7 @@ int Yices_Check(struct Para_Struct* para_head, struct Cons_Struct* cons_info, in
 
     //check
     int check_results = Array_Construction(int_type, ctx, parameters, para_head, cons_info,
-                                           valid_head, dis_head, parameters_additional_pointer,
+                                           valid_head, set_head, dis_head, parameters_additional_pointer,
                                            case_num, para_num, name);
 
     int** test_cases = NULL;

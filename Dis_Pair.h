@@ -11,6 +11,8 @@ typedef struct Dis_Pair{
     Interaction_Set codomain_set;
 
     Valid_Interaction dis_interaction;//dis between dis_interaction and codomain_set;
+    int Type_Set_Domain;
+    int Ttpe_Set_Codomain;
 
     struct Dis_Pair* next;
 

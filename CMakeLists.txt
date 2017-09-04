@@ -21,7 +21,7 @@ set(SOURCE_FILES
         Val_Struct.h
         Valid_Interaction.h
         Yices_Check.c
-        Yices_Check.h)
+        Yices_Check.h Array_Construction.c Array_Construction.h)
 
 include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
