@@ -10,7 +10,7 @@ typedef struct Valid_Interaction{
     int p1,v1;                          //Parameter 1 and its value;
     int p2,v2;                          //Parameter 2 and its value;
 
-    int interaction_type;               //strength of this interaction;
+    int interaction_type;               //strength of this interaction; value: 1 || 2
     struct Valid_Interaction* next;     //pointer to next interaction;
 
 }Valid_Interaction;

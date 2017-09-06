@@ -1,0 +1,26 @@
+(define p1:int)
+(define p2:int)
+(define p3:int)
+(define p4:int)
+(define p5:int)
+
+
+(assert (and (>= p1 1)(<= p1 3)))
+(assert (and (>= p2 1)(<= p2 3)))
+(assert (and (>= p3 1)(<= p3 3)))
+(assert (and (>= p4 1)(<= p4 2)))
+(assert (and (>= p5 1)(<= p5 2)))
+
+
+
+(assert (=> (= p2 1)(or (= p1 1)(= p1 2))))
+(assert (=> (= p3 1)(or (= p1 1)(= p1 2))))
+(assert (=> (= p2 1)(not (= p3 1))))
+(assert (=> (= p1 2)(not (= p3 1))))
+(assert (=> (= p4 1)(and (or (= p3 1)(= p3 2))(or (= p1 1)(= p1 2)))))
+(assert (=> (= p5 1) (= p4 1)))
+(assert (not (and (= p1 1)(= p2 2)(= p3 1))))
+
+
+
+

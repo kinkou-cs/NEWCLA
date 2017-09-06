@@ -128,6 +128,8 @@ int Yices_Check(struct Para_Struct* para_head, struct Cons_Struct* cons_info, in
                                            valid_head, set_head, dis_head, parameters_additional_pointer,
                                            case_num, para_num, name);
 
+
+
     int** test_cases = NULL;
 
     if(check_results == STATUS_SAT){
