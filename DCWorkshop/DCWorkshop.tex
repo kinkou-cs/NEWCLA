@@ -1,0 +1,510 @@
+%% v3.0 [2015/11/14]
+\documentclass[paper]{ieicej}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{latexsym}
+
+
+\def\IEICEJcls{\texttt{ieicej.cls}}
+\def\IEICEJver{3.0}
+\newcommand{\AmSLaTeX}{%
+ $\mathcal A$\lower.4ex\hbox{$\!\mathcal M\!$}$\mathcal S$-\LaTeX}
+\newcommand{\PS}{{\scshape Post\-Script}}
+\def\BibTeX{{\rmfamily B\kern-.05em{\scshape i\kern-.025em b}\kern-.08em
+ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125em X}}
+
+\field{A}
+\jtitle[SMTを用いた制約付きのロケーティングアレイの生成について]%
+       {SMTを用いた制約付きのロケーティングアレイの生成について}
+\etitle{On the generation of constrained locating arrays using an SMT solver}
+\makeatletter
+\if@paper
+\makeatother
+ \authorlist{%
+  \authorentry[k-kou@ist.osaka-u.ac.jp]{金　浩}{Hao JIN}{OU,AIST}
+   \MembershipNumber{58220953b9}
+  \authorentry{崔　銀惠}{Eunhye CHOI}{AIST}\MembershipNumber{}
+  \authorentry{土屋　達弘}{Tatsuhiro TSUCHIYA}{OU}\MembershipNumber{}
+ }
+\else
+ \authorlist{%
+  \authorentry[k-kou@ist.osaka-u.ac.jp]{金　浩}{Hao JIN}{OU,AIST}
+   \MembershipNumber{58220953b9}
+  \authorentry{崔　銀惠}{Eunhye CHOI}{AIST}\MembershipNumber{}
+  \authorentry{土屋　達弘}{Tatsuhiro TSUCHIYA}{OU}\MembershipNumber{}
+ }
+\fi
+\affiliate[OU]{大阪大学情報科学研究科，吹田市}
+ {Graduate School of Information Science and Technology, Osaka University,
+  Yamadaoka 1--5, Suita-shi, Osaka,
+  565--0871 Japan}
+\affiliate[AIST]{産業総合技術研究所，池田市}
+ {Information Technology Research Institute, AIST Kansai,
+  Midorigaoka 1--8--31, Ikeda-Shi, Osaka,
+  563--8577 Japan}
+
+\begin{document}
+\makeatletter
+\if@letter
+\makeatother
+\maketitle
+\fi
+\begin{abstract}
+ソフトウェアに対するインタラクションテストにおいて，ロケーティングアレイをテスト集合として用いることで，故障検出だけでなくその特定も可能となる．本研究では，テストパラメータ上の制約を考慮したロケーティングアレイの生成を，SMTソルバを用いて行う方法について説明する．
+\end{abstract}
+\begin{keyword}
+ロケーティングアレイ，組合せテスト，SMTソルバ
+\end{keyword}
+\begin{eabstract}
+IEICE (The Institute of Electronics, Information and Communication Engineers)
+provides a p\LaTeXe\ class file, named \IEICEJcls\ (ver.\,\IEICEJver),
+for the IEICE Transactions. This document describes how to use
+the class file, and also makes some remarks about typesetting
+a manuscript by using the p\LaTeXe.
+The design is based on ASCII Japanese p\LaTeXe.
+\end{eabstract}
+\begin{ekeyword}
+p\LaTeXe\ class file, typesetting, math formulas
+\end{ekeyword}
+\makeatletter
+\if@letter
+\makeatother
+\else
+ \maketitle
+\fi
+
+\section{まえがき}
+\label{sec:intro}
+%組合せテストへの導入
+ソフトウェアの開発において，その不具合，つまりフォールトを検出するためのデバッグに莫大
+なコストが費やされている．ソフトウェアシステムが日々複雑化している現在において，高効率
+な不具合検出手法はその重要性を著しく表し，具体的な検出手法の一つとして，組合せテスト
+（combinatorial testing）は注目を集めている．組合せテストはあらゆるk個のパラメータ
+に対し，それらが取りうる値の組合せ（interaction）をすべて網羅することによって，フォー
+ルトに繋がるパラメータ値の組合せを検出できる．その根拠として，Kuhnらが2002年
+\cite{kuhn2002}及び2004年\cite{kuhn2004}に発表された論文により，大多数のソフト
+ウェアの不具合はパラメータ数kが6以下の値の組み合わせにより生じることが挙げられる．組合
+せテストを利用することで，複数のテストケース（test case）が生成され，それらの集合をテ
+ストスイート（test suite）と名付ける．それぞれのテストケースは各パラメータに値を振り
+当てることであり，一つのベクトルとなる．そして，それらのベクトルの集合がテストスイート
+であり，形はマトリックスである．
+
+%組合せテストの基本な考え
+組合せテストの核となる部分は「k個のパラメータの値の組み合わせを全て網羅する」であることは明らかであり，このような網羅に対する評価をk-wayカバレッジ（k-way coverage）と呼ぶ．しかし，全てのパラメータ値の組合せを網羅したとしても，テスト集合のサイズが大き過ぎては，そのアドバンテージは現れない．いかにk-wayカバレッジの条件を満たしつつ，テストケース数を削減し，テストスイートのサイズを圧縮するかが焦点である．当問題は組合せ最適化問題の類に属し，先行研究では，様々な組合せテスト生成手法が提案されている．\cite{AETG}を始めとする貪欲法による生成方法もあり，他にも\cite{SATpairwise}のようなSATソルバを用いた生成法も存在する．
+
+%ロケーティングアレイの簡単な説明，具体的には第二章で定義する
+さらなる効果を求めるため，組合せテストによる検出機能のみならず，フォールトを特定する機能をも持つロケーティングアレイ（locating array）が提案されている\cite{colbourn}．組合せテストの特徴はパラメータ値の組合せを網羅することであり，その結果として生成されたテストスイートの中，たとえフォールトになるテストケースを発見しても，当テストケースが含む全ての組合せがフォールティインタラクション（faulty interaction）の候補であるため，そのさらなる特定は不可能である．そこで，テストケースを増加することにより，同一テストケースに含まれる組合せ間でも，他のテストケースと比較することにより，特定できるようなテストスイートのがロケーティングアレイである．
+
+%論文の構成
+本論文の章構成は以下の通りである．{\bfseries \ref{sec:cla}} で制約付きロケーティングアレイについて述べ，{\bfseries \ref{sec:SMT}} ではSMT問題への変換について述べる．{\bfseries \ref{sec:experiments}} では提案手法に基づく実験を行い，実行時の動作結果・考察について述べる．最後に{\bfseries \ref{sec:conclusion}} では，研究の結論と今後の展望について述べる．
+
+\section{制約付きロケーティングアレイ}
+\label{sec:cla}
+
+{\bfseries \ref{sec:intro}}で述べたように，ロケーティングアレイは組合せテストのカ
+バー特性を保ちつつ，テストケースを増やすことにより，さらなる特定機能を得たテストスイー
+トである．これまでに，ロケーティングアレイについての研究は\cite{KonishiSAT}と
+\cite{Nagamoto}などが存在する．しかし，対象システム（SUT，System Under Testing）
+の固有制約を考慮したロケーティングアレイの研究はまだ少ない．一般的に，ほとんどのシステ
+ムはその仕様により，入力またはコンポーネント間で固有の制限，制約（constraint）が存在
+する．これらを考慮することで，ロケーティングアレイはより実用化となる．本章ではそのよう
+な制約を考慮したロケーティングアレイの生成について述べる．
+
+\subsection{基本概念}
+\label{subsec:concept}
+\begin{itemize}
+\item 無効な値の組合せ
+
+SUTは複数の入力パラメータを持ち，それぞれのパラメータはまた複数の値候補から一つ値を取
+れるのだが，システムの仕様により，特定なパラメータの値の組合せは有効ではないことがあ
+る．このような組合せは無効な値の組合せ（invalid interaction）であり，テスト設計で
+は，テストケースに出現してはいけない．例を挙げると，システム$S$において，パラ
+メータ$P_1$及びパラメータ$P_2$は以下のような制約が存在する：
+\[ P_1  =  v_1 \to P_2  =  v_1 \]
+
+
+
+
+
+\end{itemize}
+\subsection{適応事例}
+\label{subsec:example}
+
+\section{SMT問題への変換}
+\label{sec:SMT}
+
+\subsection{エンコーディング}
+\label{subsec:encoding}
+
+\subsubsection{無効インタラクション}
+\label{subsec:invalid}
+
+\subsubsection{区別不能なインタラクションペア}
+\label{subsec:indistinguishable}
+
+
+\subsection{Synmmetry Breaking}
+\label{subsec:symmetry}
+
+\section{実験・評価}
+\label{sec:experiments}
+
+\section{結論}
+\label{sec:conclusion}
+
+\begin{itemize}
+\item
+最終原稿の提出に関しては，各ソサイエティの
+「投稿のしおり」を参照してください．
+\item
+ソース・ファイルはできるだけ1本のファイルにまとめてください．
+\item
+著者独自のマクロを記述したファイルや文献，
+図の EPS ファイルなどを忘れていないかご確認願います．
+\end{itemize}
+
+\begin{thebibliography}{99}
+%\bibitem{ohno}
+%大野義夫編，\TeX\ 入門，
+%共立出版，東京，1989.
+
+%\bibitem{Seroul}
+%R. Seroul and S. Levy, A Beginner's Book of \TeX,
+%Springer-Verlag, New York, 1989.
+
+%\bibitem{nodera1}
+%野寺隆志，楽々\LaTeX{}，
+%共立出版，東京，1990.
+
+%\bibitem{itou}
+%伊藤和人，\LaTeX\ トータルガイド，
+%秀和システムトレーディング，1991.
+
+%\bibitem{nodera2}
+%野寺隆志，今度こそ\AmSLaTeX{}，
+%共立出版，東京，1991.
+
+\bibitem{kuhn2002}
+D.E. クヌース，改訂新版 \TeX\ ブック，
+アスキー出版局，東京，1992.
+
+\bibitem{kuhn2004}
+磯崎秀樹，\LaTeX\ 自由自在，
+サイエンス社，東京，1992.
+
+%\bibitem{impress}
+%鷺谷好輝，日本語 \LaTeX\ 定番スタイル集，
+%インプレス，東京，1992--1994.
+
+%\bibitem{Gr}
+%G. Gr\"{a}tzer,
+%Math into \TeX\,--\,A Simple Introduction to \AmSLaTeX,
+%Birkh\"{a}user, 1993.
+
+\bibitem{AETG}
+藤田眞作，
+化学者・生化学者のための\LaTeX---パソコンによる論文作成の手引，
+東京化学同人，東京，1993.
+
+%\bibitem{styleuse}
+%古川徹生，岩熊哲夫，
+%\LaTeX\ のマクロやスタイルファイルの利用（styleuse.tex），1994.
+
+\bibitem{SATpairwise}
+阿瀬はる美，てくてく\TeX{}，
+アスキー出版局，東京，1994.
+
+\bibitem{colbourn}
+S. von Bechtolsheim, \TeX\ in Practice,
+Springer-Verlag, New York, 1993.
+
+\bibitem{KonishiSAT}
+N. Walsh, Making \TeX\ Work,
+O'Reilly \& Associates, Sebastopol, 1994.
+
+\bibitem{Nagamoto}
+D. Salomon, The Advanced \TeX\ book,
+Springer-Verlag, New York, 1995.
+
+\bibitem{hujita2}
+藤田眞作，\LaTeX\ マクロの八衢，
+アジソン・ウェスレイ・パブリッシャーズ・ジャパン，東京，1995.
+
+\bibitem{Nakano}
+中野賢，日本語 \LaTeXe\ ブック，
+アスキー出版局，東京，1996.
+
+\bibitem{Fujita4}
+藤田眞作，\LaTeXe\ 階梯，
+アジソン・ウェスレイ・パブリッシャーズ・ジャパン，東京，1996.
+
+\bibitem{otobe}
+乙部巌己，江口庄英，
+p\LaTeXe\ for Windows\ Another Manual，
+ソフトバンク パブリッシング，東京，1996--1997.
+
+\bibitem{Abrahams}
+% P.W. Abrahams, \TeX\ for the Impatient,
+% (Addison-Wesley, 1992).
+ポール W. エイブラハム，明快 \TeX{}，
+アジソン・ウェスレイ・パブリッシャーズ・ジャパン，東京，1997.
+
+\bibitem{Eguchi}
+江口庄英，Ghostscript Another Manual，
+ソフトバンク パブリッシング，東京，1997.
+
+\bibitem{FMi1}
+% M. Goossens, F. Mittelbach, and A. Samarin, The \LaTeX\ Companion,
+% Addison-Wesley, Reading, 1994.
+マイケル・グーセンス，フランク・ミッテルバッハ，アレキサンダー・サマリン，
+\LaTeX\ コンパニオン，アスキー出版局，東京，1998.
+
+\bibitem{Eijkhout}
+% V. Eijkhout, \TeX\ by Topic, Addison-Wesley, Wokingham, 1991.
+ビクター・エイコー，\TeX\ by Topic---\TeX\ をよく深く知るための39章，
+アスキー出版局，東京，1999.
+
+\bibitem{latex}
+%レスリー ランポート，文書処理システム\LaTeX{}，
+%アスキー出版局，東京，1990.
+レスリー・ランポート，文書処理システム \LaTeXe{}，
+ピアソンエデュケーション，東京，1999.
+
+\bibitem{Okumura3}
+奥村晴彦，［改訂版］\LaTeXe\ 美文書作成入門，
+技術評論社，東京，2000.
+
+\bibitem{FMi2}
+% M. Goossens, S. Rahts, and  F. Mittelbach,
+% The \LaTeX\ Graphics Companion (Addison-Wesley, 1997).
+マイケル・グーセンス，セバスチャン・ラッツ，フランク・ミッテルバッハ，
+\LaTeX\ グラフィックスコンパニオン，アスキー出版局，東京，2000.
+
+\bibitem{FGo1}
+% M. Goossens, and S. Rahts,
+% The \LaTeX\ Web Companion, Addison-Wesley,  1999.
+マイケル・グーセンス，セバスチャン・ラッツ，
+\LaTeX\ Web コンパニオン---\TeX\ とHTML/XML の統合，
+アスキー出版局，東京，2001.
+
+\bibitem{PEn}
+ページ・エンタープライゼス\<（株）\<，
+\LaTeXe\ マクロ \& クラスプログラミング基礎解説，
+技術評論社，東京，2002.
+
+\bibitem{Fujita5}
+藤田眞作，\LaTeXe\ コマンドブック，
+ソフトバンク パブリッシング，東京，2003.
+
+\bibitem{Yoshinaga}
+吉永徹美，
+\LaTeXe\ マクロ \& クラスプログラミング実践解説，
+技術評論社，東京，2003.
+
+\bibitem{texwiki}
+https://oku.edu.mie-u.ac.jp/\~{}okumura/texwiki/
+\end{thebibliography}
+
+\appendix
+%\label{sec:app}
+\section{PDFの作成方法とA4用紙への出力}
+
+\begin{itemize}
+\item
+PDF に書き出すには二通りの方法があります．
+\begin{enumerate}
+\item
+dvipdfmx を使って PDF に変換する（以下では段幅の関係で折り返します）．
+\begin{verbatim}
+dvipdfmx -p 182mm,257mm -x 1in -y 1in
+ -o file.pdf file.dvi
+\end{verbatim}
+用紙サイズとして \texttt{jisb5} というオプションが使えるかもしれません．
+オプションの \texttt{-x 1in -y 1in} は省略できます．
+
+\item
+まず，dvips を使用して，ps に書き出します．
+\begin{verbatim}
+dvips -Pprinter -t b5 -O 0in,0in
+  -o file.ps file.dvi
+\end{verbatim}
+\texttt{printer} には，使用するプリンタ名を記述します．
+オプションの \texttt{-O 0in,0in} は省略できます．
+
+次に Acrobat Distiller で PDF に変換します．
+\end{enumerate}
+
+\item
+\texttt{dvips} を使用してA4用紙に出力する場合の
+パラメータはおおよそ以下のような設定になります．
+\begin{verbatim}
+dvips -Pprinter -t a4 -O 14mm,20mm file.dvi
+\end{verbatim}
+\texttt{printer} には使用するプリンタ名を記述します．
+オプションの \texttt{-t a4} は省略できます．
+
+\item
+Windows 上の dviout を利用して，
+用紙の左右天地中央に版面を自動配置する場合は以下のようにします．
+\begin{enumerate}
+\item
+dviout を起動します．
+\item
+メニューバーにある Option の中の Setup Parameters... を選択します．
+\item
+「DVIOUTのプロパティ」というダイアログが開くので，
+Paper というタブを選択します．
+\item
+Options という枠の中に Horizontal centering と Vertical centering という
+チェックボックスがあるので，
+それぞれチェックした後に Save ボタンを押します．
+\item
+この設定を行った後に dvi ファイルを開くと，
+版面が用紙の中心に配置されます．
+\end{enumerate}
+\end{itemize}
+
+%\section{\texttt{jis.tfm} の利用}
+%\label{sec:jistfm}
+%
+%株式会社リーブルテック（旧東京書籍印刷）の小林肇さんが作成された
+%\texttt{jis.tfm} の利用を奨めます．
+%ドキュメントクラスのオプションに \texttt{usejistfm} を指定します．
+%\begin{verbatim}
+%\documentclass[paper,usejistfm]{ieicej}
+%\end{verbatim}
+%テンプレート（\texttt{template.tex}）ではデフォルトの設定になっています．
+%
+%\texttt{jis.tfm} のインストールなどに関しては
+%「日本語\TeX\ 情報」
+%（http://oku.edu.mie-u.ac.jp\slash\~{}okumura\slash texfaq\slash{}）
+%などを参照してください．
+
+\section{削除したコマンド}
+
+本誌の体裁に必要のないコマンドは削除しています．
+削除したコマンドは，\verb/\part/，\allowbreak
+\verb/\theindex/，\allowbreak
+\verb/\tableofcontents/，\allowbreak
+\verb/\titlepage/，\allowbreak
+ページスタイルを変更するオプション（\texttt{headings}，
+\texttt{myheadings}）などです．
+
+%\section{変更履歴}
+%
+%\subsection{v1.1（v1.0 からの変更点）}
+%
+%\begin{itemize}
+%\item
+%「技術研究報告」の体裁に対応．
+%\item
+%複数の所属がある場合に，ラベルの記述順に所属マークが出るように変更．
+%\item
+%C分冊の場合に，メールアドレスを脚注部分に出力できるようにした．
+%\end{itemize}
+%
+%\subsection{v1.2（v1.1 からの変更点）}
+%
+%\begin{itemize}
+%\item
+%「技術研究報告」の先頭ページの出力様式を変更．
+%\end{itemize}
+%
+%\subsection{v1.3（v1.2 からの変更点）}
+%
+%\begin{itemize}
+%\item
+%B--I，B--II および C--I，C--II 分冊がそれぞれ，
+%B，C に統合されたことに伴う修正．
+%\item
+%C分冊で「レター論文」が「レター」と変更されたことに伴う修正．
+%\item
+%すべての分冊でメールアドレスを脚注部分に出力できるように修正．
+%\item
+%英文アブストラクトと英文キーワードを記述できるように定義を追加．
+%\item
+%複数の「現在の所属ラベル」を指定できるように修正．
+%\item
+%会員種別の「Associate Member」（准員）を「Affiliate Member」に，
+%「Honorary Member」（名誉員）を「Fellow, Honorary Member」に変更．
+%および，「正員：フェロー（Fellow）」を追加．
+%\item
+%\verb/\typeofletter/ を指定しない場合，
+%「研究速報」の体裁になるように変更．
+%\item
+%著者紹介で顔写真の EPS を取り込めるようにした．
+%顔写真のない場合にも対応．
+%%\item
+%% \verb/\finalreceived/（最終受付）を追加．
+%\item
+%\texttt{jis.tfm} が使用できるようにした．
+%\end{itemize}
+%
+%\subsection{v1.4（v1.3 からの変更点）}
+%
+%このバージョンは配布されなかったようです．
+%\begin{itemize}
+%\item
+%先頭ページのフッタに，
+%「（社）電子情報通信学会」の copyright 表示を追加した．
+%\end{itemize}
+%
+%\subsection{v1.5（v1.4 からの変更点）}
+%
+%\begin{itemize}
+%\item
+%\verb/\documentclass/ のオプション \texttt{letterpaper} を
+%\texttt{electronicsletter} に変更した．
+%\item
+%D--I，D--II 分冊が統合されたことに伴う修正．
+%\end{itemize}
+%
+%\subsection{v1.6（v1.5 からの変更点）}
+%
+%\begin{itemize}
+%\item
+%会員種別に「正員：シニア会員（Senior）」を追加．
+%\end{itemize}
+%
+%\subsection{v2.0（v1.6 からの変更点）}
+%
+%\begin{itemize}
+%\item
+%会員番号を投稿原稿の最終ページに出力するため，
+%\verb/\MembershipNumber/ を定義．
+%
+%\item
+%\verb/\affiliate/ の記述を，所属/部署/住所に分けて記述するようにした．
+%\end{itemize}
+%
+%\subsection{v3.0（v2.0 からの変更点）}
+%
+%\texttt{uplatex}によるコンパイルに対応した．
+
+\makeatletter
+\if@letter\else
+\makeatother
+\begin{biography}
+\profile{m}{電子 花子}{%
+1996東北一大学情報工学科卒．
+1999東京第一大学工学部工学部助手．
+某システムの研究に従事．
+}
+\profile{m}{情報 太郎}{%
+1995大阪一大学工学科卒．
+1997同大大学院工学研究科修士課程了．
+1998大阪（株）入社．
+某コンピュータ応用の研究に従事．
+ABC学会会員．
+}
+\profile{n}{通信 次郎}{%
+1980九州一大学理工学部卒．
+1981大阪（株）入社．
+現在ATT日本研究所に所属．
+}
+\end{biography}
+\fi
+
+\end{document}

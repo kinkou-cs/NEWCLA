@@ -1837,6 +1837,31 @@ struct Dis_Pair* Check_Dis(context_t* ctx, term_t* parameters, struct Interactio
 
     }
 
+    current_dis = dis_head;
+    int num_dis = 0;
+    while(current_dis != NULL){
+
+//        printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+//        printf("Set1.T1.p1=%d, Set1.T1.v1=%d\n", current_dis->domain_set.Interaction_1.p1, current_dis->domain_set.Interaction_1.v1);
+//        printf("Set1.T1.p2=%d, Set1.T1.v2=%d\n", current_dis->domain_set.Interaction_1.p2, current_dis->domain_set.Interaction_1.v2);
+//        printf("Set1.T2.p1=%d, Set1.T2.v1=%d\n", current_dis->domain_set.Interaction_2.p1, current_dis->domain_set.Interaction_2.v1);
+//        printf("Set1.T2.p2=%d, Set1.T2.v2=%d\n", current_dis->domain_set.Interaction_2.p2, current_dis->domain_set.Interaction_2.v2);
+//
+//        printf("\n\n\n");
+//
+//        printf("Set2.T1.p1=%d, Set2.T1.v1=%d\n", current_dis->codomain_set.Interaction_1.p1, current_dis->codomain_set.Interaction_1.v1);
+//        printf("Set2.T1.p2=%d, Set2.T1.v2=%d\n", current_dis->codomain_set.Interaction_1.p2, current_dis->codomain_set.Interaction_1.v2);
+//        printf("Set2.T2.p1=%d, Set2.T2.v1=%d\n", current_dis->codomain_set.Interaction_2.p1, current_dis->codomain_set.Interaction_2.v1);
+//        printf("Set2.T2.p2=%d, Set2.T2.v2=%d\n", current_dis->codomain_set.Interaction_2.p2, current_dis->codomain_set.Interaction_2.v2);
+//        printf("\nare distinguishable\n");
+//        printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+        num_dis++;
+        current_dis = current_dis->next;
+
+    }
+
+    printf("\n\n\nnum_dis = %d\n\n\n", num_dis);
+
     return dis_head;
 
 

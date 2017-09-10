@@ -834,13 +834,58 @@ int Array_Construction(type_t int_type, context_t* ctx, term_t* parameters, stru
 
 
     //symmetry breaking
-    term_t sb_dash = yices_and2(yices_arith_eq_atom(parameters[dis_head->dis_interaction.p1 - 1], yices_int32(dis_head->dis_interaction.v1)),
-                                yices_arith_eq_atom(parameters[dis_head->dis_interaction.p2 - 1], yices_int32(dis_head->dis_interaction.v2)));
-    yices_assert_formula(ctx, sb_dash);
+//    term_t sb_dash = yices_and2(yices_arith_eq_atom(parameters[dis_head->dis_interaction.p1 - 1], yices_int32(dis_head->dis_interaction.v1)),
+//                                yices_arith_eq_atom(parameters[dis_head->dis_interaction.p2 - 1], yices_int32(dis_head->dis_interaction.v2)));
+//    yices_assert_formula(ctx, sb_dash);
 
-    term_t sb_dash_second = yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[0][dis_head->codomain_set.Interaction_1.p1 - 1], yices_int32(dis_head->codomain_set.Interaction_1.v1)),
-                                       yices_arith_eq_atom((*parameters_additional_pointer)[0][dis_head->codomain_set.Interaction_1.p2 - 1], yices_int32(dis_head->codomain_set.Interaction_1.v2)));
-    yices_assert_formula(ctx, sb_dash_second);
+//    term_t sb_dash_second = yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[0][dis_head->codomain_set.Interaction_1.p1 - 1], yices_int32(dis_head->codomain_set.Interaction_1.v1)),
+//                                       yices_arith_eq_atom((*parameters_additional_pointer)[0][dis_head->codomain_set.Interaction_1.p2 - 1], yices_int32(dis_head->codomain_set.Interaction_1.v2)));
+//    yices_assert_formula(ctx, sb_dash_second);
+
+    term_t* sb = (term_t*)malloc(sizeof(term_t) * (test_case_num - 1));
+    term_t sum1 = 0;
+    term_t sum2 = 0;
+    for(int i = 0; i < test_case_num - 1; i++){
+
+        for(int j = 0; j < para_num; j++){
+
+            int v = (int)pow(4, para_num - j);
+            if(i == 0){
+
+                if(j == 0) {
+
+                    sum1 = yices_add(yices_int32(0), yices_mul(parameters[j], yices_int32(v)));
+                    sum2 = yices_add(yices_int32(0), yices_mul((*parameters_additional_pointer)[0][j], yices_int32(v)));
+
+                }else{
+
+                    sum1 = yices_add(sum1, yices_mul(parameters[j], yices_int32(v)));
+                    sum2 = yices_add(sum2, yices_mul((*parameters_additional_pointer)[0][j], yices_int32(v)));
+
+                }
+
+            }else{
+
+                if(j == 0){
+
+                    sum1 = yices_add(yices_int32(0), yices_mul((*parameters_additional_pointer)[i - 1][j], yices_int32(v)));
+                    sum2 = yices_add(yices_int32(0), yices_mul((*parameters_additional_pointer)[i][j], yices_int32(v)));
+
+                }else{
+
+                    sum1 = yices_add(sum1, yices_mul((*parameters_additional_pointer)[i - 1][j], yices_int32(v)));
+                    sum2 = yices_add(sum2, yices_mul((*parameters_additional_pointer)[i][j], yices_int32(v)));
+
+                }
+
+            }
+
+        }
+        sb[i] = yices_arith_leq0_atom(yices_sub(sum1, sum2));
+
+        yices_assert_formula(ctx, sb[i]);
+
+    }
 
 
     //Check Result

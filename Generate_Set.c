@@ -2,6 +2,7 @@
 // Created by kinkou on 17/09/01.
 //
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "Interaction_Set.h"
 #include "Generate_Set.h"
@@ -59,14 +60,34 @@ struct Interaction_Set* Generate_Set(struct Valid_Interaction* valid_head){
         interaction_right = interaction_left->next;
         while(interaction_right != NULL){
 
-            current_set->next = (Interaction_Set*)malloc(sizeof(struct Interaction_Set));
-            current_set->next->Interaction_1 = *interaction_left;
-            current_set->next->Interaction_2 = *interaction_right;
-            current_set->next->set_type = 2;
+            int check_type = interaction_left->interaction_type == 2 && interaction_right->interaction_type == 1;
+            int check_value = (interaction_left->p1 == interaction_right->p1 && interaction_left->v1 == interaction_right->v1) ||
+                              (interaction_left->p2 == interaction_right->p1 && interaction_left->v2 == interaction_right->v1);
+            int check_total = check_type && check_value;
 
-            current_set->next->next = NULL;
+            if(check_total){   //check for dependency
 
-            current_set = current_set->next;
+                current_set->next = (Interaction_Set*)malloc(sizeof(struct Interaction_Set));
+                current_set->next->Interaction_1 = *interaction_left;
+                current_set->next->Interaction_2 = *interaction_right;
+                current_set->next->set_type = 2;
+
+                current_set->next->next = NULL;
+
+                current_set = current_set->next;
+
+            }
+            else{
+
+                printf("##################################################\n");
+                printf("T1.p1=%d, T1.v1=%d\n", interaction_left->p1, interaction_left->v1);
+                printf("T1.p2=%d, T1.v2=%d\n", interaction_left->p2, interaction_left->v2);
+                printf("\n");
+                printf("T2.p1=%d, T2.v1=%d\n", interaction_right->p1, interaction_right->v2);
+                printf("\nare independent\n");
+                printf("##################################################\n");
+
+            }
 
             interaction_right = interaction_right->next;
 

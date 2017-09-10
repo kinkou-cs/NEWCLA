@@ -164,7 +164,7 @@ int Yices_Check(struct Para_Struct* para_head, struct Cons_Struct* cons_info, in
 
         *para_num_m = para_num;
 
-        printf("\n\n\n(1,2)-Constrained Locating Array is:\n\n\n");
+        printf("\n\n\n(2',2')-Constrained Locating Array is:\n\n\n");
 
         for(int i = 0; i < test_case_num; i++){
 
