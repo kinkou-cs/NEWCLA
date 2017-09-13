@@ -5,6 +5,7 @@
 \usepackage{lmodern}
 \usepackage{textcomp}
 \usepackage{latexsym}
+\usepackage{amsmath}
 
 
 \def\IEICEJcls{\texttt{ieicej.cls}}
@@ -78,74 +79,182 @@ p\LaTeXe\ class file, typesetting, math formulas
 \section{まえがき}
 \label{sec:intro}
 %組合せテストへの導入
-ソフトウェアの開発において，その不具合，つまりフォールトを検出するためのデバッグに莫大
-なコストが費やされている．ソフトウェアシステムが日々複雑化している現在において，高効率
-な不具合検出手法はその重要性を著しく表し，具体的な検出手法の一つとして，組合せテスト
-（combinatorial testing）は注目を集めている．組合せテストはあらゆるk個のパラメータ
-に対し，それらが取りうる値の組合せ（interaction）をすべて網羅することによって，フォー
-ルトに繋がるパラメータ値の組合せを検出できる．その根拠として，Kuhnらが2002年
-\cite{kuhn2002}及び2004年\cite{kuhn2004}に発表された論文により，大多数のソフト
-ウェアの不具合はパラメータ数kが6以下の値の組み合わせにより生じることが挙げられる．組合
-せテストを利用することで，複数のテストケース（test case）が生成され，それらの集合をテ
-ストスイート（test suite）と名付ける．それぞれのテストケースは各パラメータに値を振り
-当てることであり，一つのベクトルとなる．そして，それらのベクトルの集合がテストスイート
-であり，形はマトリックスである．
+ソフトウェアの開発において，その不具合，つまりフォールトを検出するためのデバッグに莫大なコストが費やされている．ソフトウェアシステムが日々複雑化している現在において，高効率な不具合検出手法はその重要性を著しく表し，具体的な検出手法の一つとして，組合せテスト（combinatorial testing）は注目を集めている．組合せテストはあらゆるk個のパラメータに対し，それらが取りうる値の組合せ（interaction）をすべて網羅することによって，フォールトに繋がるパラメータ値の組合せを検出できる．その根拠として，Kuhnらが2002年\cite{kuhn2002}及び2004年\cite{kuhn2004}に発表された論文により，大多数のソフトウェアの不具合はパラメータ数$k$が6以下の値の組み合わせにより生じることが挙げられる．組合せテストを利用することで，複数のテストケース（test case）が生成され，それらの集合をテストスイート（test suite）と名付ける．それぞれのテストケースは各パラメータに値を振り当てることであり，一つのベクトルとなる．そして，それらのベクトルの集合がテストスイートであり，マトリックスの形式で表す．
 
 %組合せテストの基本な考え
-組合せテストの核となる部分は「k個のパラメータの値の組み合わせを全て網羅する」であることは明らかであり，このような網羅に対する評価をk-wayカバレッジ（k-way coverage）と呼ぶ．しかし，全てのパラメータ値の組合せを網羅したとしても，テスト集合のサイズが大き過ぎては，そのアドバンテージは現れない．いかにk-wayカバレッジの条件を満たしつつ，テストケース数を削減し，テストスイートのサイズを圧縮するかが焦点である．当問題は組合せ最適化問題の類に属し，先行研究では，様々な組合せテスト生成手法が提案されている．\cite{AETG}を始めとする貪欲法による生成方法もあり，他にも\cite{SATpairwise}のようなSATソルバを用いた生成法も存在する．
+組合せテストの核となる部分は「$k$個のパラメータの値の組み合わせを全て網羅する」であることは明らかであり，このような網羅に対する評価を$k$-wayカバレッジ（$k$-way coverage）と呼ぶ．しかし，全てのパラメータ値の組合せを網羅したとしても，テスト集合のサイズが大き過ぎては，そのアドバンテージは現れない．いかに$k$-wayカバレッジの条件を満たしつつ，テストケース数を削減し，テストスイートのサイズを圧縮するかが焦点である．当問題は組合せ最適化問題の類に属し，先行研究では，様々な組合せテスト生成手法が提案されている．\cite{AETG}を始めとする貪欲法による生成方法もあり，他にも\cite{SATpairwise}のようなSATソルバを用いた生成法も存在する．
 
 %ロケーティングアレイの簡単な説明，具体的には第二章で定義する
-さらなる効果を求めるため，組合せテストによる検出機能のみならず，フォールトを特定する機能をも持つロケーティングアレイ（locating array）が提案されている\cite{colbourn}．組合せテストの特徴はパラメータ値の組合せを網羅することであり，その結果として生成されたテストスイートの中，たとえフォールトになるテストケースを発見しても，当テストケースが含む全ての組合せがフォールティインタラクション（faulty interaction）の候補であるため，そのさらなる特定は不可能である．そこで，テストケースを増加することにより，同一テストケースに含まれる組合せ間でも，他のテストケースと比較することにより，特定できるようなテストスイートのがロケーティングアレイである．
+さらなる効果を求めるため，組合せテストによる検出機能のみならず，フォールトを特定する機能をも持つロケーティングアレイ（locating array）が提案されている\cite{colbourn}．組合せテストの特徴はパラメータ値の組合せを網羅することであり，その結果として生成されたテストスイートの中，たとえフォルス（false）になるテストケースを発見しても，そのテストケースが含む全ての組合せがフォールティインタラクション（faulty　interaction）の候補であるため，そのさらなる特定は難しい．そこで，テストケースを増加することで，同一テストケースに含まれる組合せ間でも，他のテストケースと比較することにより，特定できるようなテストスイート，ロケーティングアレイが望ましい．フォールティインタラクション数が1であり，2-wayカバレッジを満たすロケーティングアレイを(1, 2)-locating arrayと呼ぶ．
 
 %論文の構成
-本論文の章構成は以下の通りである．{\bfseries \ref{sec:cla}} で制約付きロケーティングアレイについて述べ，{\bfseries \ref{sec:SMT}} ではSMT問題への変換について述べる．{\bfseries \ref{sec:experiments}} では提案手法に基づく実験を行い，実行時の動作結果・考察について述べる．最後に{\bfseries \ref{sec:conclusion}} では，研究の結論と今後の展望について述べる．
+本論文の章構成は以下の通りである．{\bfseries \ref{sec:cla}} で制約付きロケーティングアレイについて述べ，{\bfseries \ref{sec:SMT}}ではSMT問題への変換について説明する．{\bfseries\ref{sec:experiments}} では提案手法に基づく実験を行い，実行時の動作結果について考察する．最後に{\bfseries \ref{sec:conclusion}} では，研究の結論と今後の展望について述べる．
 
 \section{制約付きロケーティングアレイ}
 \label{sec:cla}
 
-{\bfseries \ref{sec:intro}}で述べたように，ロケーティングアレイは組合せテストのカ
-バー特性を保ちつつ，テストケースを増やすことにより，さらなる特定機能を得たテストスイー
-トである．これまでに，ロケーティングアレイについての研究は\cite{KonishiSAT}と
-\cite{Nagamoto}などが存在する．しかし，対象システム（SUT，System Under Testing）
-の固有制約を考慮したロケーティングアレイの研究はまだ少ない．一般的に，ほとんどのシステ
-ムはその仕様により，入力またはコンポーネント間で固有の制限，制約（constraint）が存在
-する．これらを考慮することで，ロケーティングアレイはより実用化となる．本章ではそのよう
-な制約を考慮したロケーティングアレイの生成について述べる．
+{\bfseries\ref{sec:intro}}で述べたように，ロケーティングアレイは組合せテストのカバー特性を保ちつつ，テストケースを増やすことにより，さらなる特定機能を得たテストスイートである．これまでに，ロケーティングアレイについての研究は\cite{KonishiSAT}と\cite{Nagamoto}などが存在する．しかし，対象システム（SUT，System Under Testing）の固有制約を考慮したロケーティングアレイの研究はまだ少ない．一般的に，ほとんどのシステムはその仕様により，入力パラメータまたはコンポーネント間で固有の制限，制約（constraint）が存在する．これらを考慮することで，ロケーティングアレイはより実用化となる．本章ではそのような制約を考慮したロケーティングアレイ，(1, 2)-constrained locating array(CLA)の生成について述べる．
 
 \subsection{基本概念}
 \label{subsec:concept}
 \begin{itemize}
+\item SUTモデル
+
+制約付きロケーティングアレイに適するシステムSUTを以下のように定義する．SUTはタプル$\langle\cal F,S,\phi\rangle$で表す，そのうち，${\cal F}=\{F_1, F_2, ..., F_k\}$と定義し，SUTにおける$k$個の入力パラメータを表す；各パラメータにおける変域の集合を${\cal S}=\{S_1, S_2, ..., S_k\}$と定義する；${\cal\phi}:S_1\times ... \times S_k\to \{true, false\}$はSUTモデルの固有制約を表す．各パラメータ変域には，二値以上の値を持ち，それらを0からの番号を振り当てることで，記述上の便利を図る，すなわち，$S_i=\{0, 1, ..., |S_i-1|\}$のように表す．以上のように定義することから，各テストケース$\boldsymbol\sigma$は$S_1\times S_2 \times ...\times S_k$の形をした一つのベクトルとなる．$N$個のテストケースを含むテストスイート$A$は，$N\times k$のアレイである．
+
 \item 無効な値の組合せ
 
-SUTは複数の入力パラメータを持ち，それぞれのパラメータはまた複数の値候補から一つ値を取
-れるのだが，システムの仕様により，特定なパラメータの値の組合せは有効ではないことがあ
-る．このような組合せは無効な値の組合せ（invalid interaction）であり，テスト設計で
-は，テストケースに出現してはいけない．例を挙げると，システム$S$において，パラ
-メータ$P_1$及びパラメータ$P_2$は以下のような制約が存在する：
-\[ P_1  =  v_1 \to P_2  =  v_1 \]
+システム定義の$\cal \phi$により，特定なパラメータの値の組合せは有効ではないことがある．このような組合せは無効な値の組合せ（invalid interaction）と呼び，テスト設計では，テストケースに出現してはいけない．例を挙げると，システム$\langle\cal F,S,\phi\rangle$において，$|{\cal F}|=5, |S_1|=...=|S_5|=2$，パラメータ$F_1$及びパラメータ$F_2$は以下のような制約$\phi_1$が存在する：
+\[ \phi_1 : F_1  =  0 \to F_2  =  0 \]
+すなわち，$(F_1, F_2)$の組合せ$\{(0, 0), (0, 1), (1, 0), (1, 1)\}$のなか，$(1, 0)$は$\phi_1$と矛盾しているため，テストケースの中では出現できない．故に，このシステムにおいては，$(1, 0)$は無効な値の組合せの一つとなる．$\{(0, 0), (0, 1), (1, 1)\}$のようなインタラクションは有効な値の組合せ（valid interaction，以降VIとする）であり，すべての有効な二値の組合せ集合を${\cal VI}_2$と示す．そして，このようにパラメータに値を振り当てることを$\sigma(F_i, s_i)$と示す．テストケースにおいては，VIのみを含むものが有効である．テストスイート$A$のなか，有効なインタラクション$T$を含むテストケースの集合を$\rho_A(T)$と表す．
 
+\item 区別不可能なインタラクションペア
 
-
-
+テストケースを実行し，その結果からフォルティインタラクションを特定するには，以下の式を満たす必要がある：
+\begin{eqnarray}
+\label{CLA-core}
+\forall T_1, T_2\in {\cal VI}_2; T_1 \not= T_2\Leftrightarrow\rho_A(T_1) \not= \rho_A(T_2)
+\end{eqnarray}
+故に，任意の異なる2つのインタラクションは，少なくとも一つのテストケースでは，同時に出現してはいけない．しかし，異なるVI間でも，固有制約により，上記の論理式を満たせない場合がある：
+\[
+T_1, T_2\in {\cal VI}_2\land T_1 \not= T_2\land\rho_A(T_1) = \rho_A(T_2)\nonumber
+\]
+このような2つのVIは(1, 2)-CLAにおいて特定不可能であるため，区別不能なインタラクションペア（indistinguishable pair，以降IPとする）と定義する．前例同様に，$|{\cal F}|=5, |S_1|=...=|S_5|=2$のようなシステムを考える．ここで，インタラクション$(\sigma(F_1, 0), \sigma(F_2, 0))$と$(\sigma(F_1, 0), \sigma(F_3, 0))$はVIとする．システムの制約$\phi$に以下のような2つの制約を想定する：
+\begin{eqnarray}
+\phi_2 : F_2 = 0 \to F_3 = 0
+\end{eqnarray}
+\begin{eqnarray}
+\phi_3 : F_3 = 0 \to F_2 = 0
+\end{eqnarray}
+つまり，パラメータ$F_2, F_3$においては，片方が0の値を取る場合，もう片方も必ず0の値を取るということである．$\phi_2, \phi_3$により，$(\sigma(F_1, 0), \sigma(F_2, 0))$と$(\sigma(F_1, 0), \sigma(F_3, 0))$の2つのVIは必ず同一のテストケースに出現しなければならない．故に，この両者はIPである．すべてのVIに対し，2つのインタラクションを選択し，それらがIPではない場合は，少なくとも一つのテストケースに同時出現させないことで，(\ref{CLA-core})を満たすことができる．
 
 \end{itemize}
 \subsection{適応事例}
 \label{subsec:example}
 
+\begin{table}[tb]
+	\caption{SUT：携帯電話}
+	\label{sut:mobil}
+	\begin{center}
+		\begin{tabular}{|l|p{1cm}|p{1.35cm}|p{1.1cm}|p{1.15cm}|p{1.15cm}|}
+			\hline
+			$\cal F$ & $F_1$: Display & $F_2$: Email Viewer & $F_3$: Camera & $F_4$: Video Camera & $F_5$: Video Ringtones\\ \hline
+			$\cal S$ & 0:16MC & 0:Graphical & 0:2MP & 0:Yes & 0:Yes \\ 
+			& 1:8MC & 1:Text & 1:1MP & 1:No & 1:No \\
+			& 2:BW & 2:None & 2:None &   &   \\ \hline
+			$\cal \phi$ & \multicolumn{5}{|l|}{$\phi_1: F_2 = 0 \to F_3 \not= 2$}\\
+			& \multicolumn{5}{|l|}{$\phi_2: F_3 = 0 \to F_1 \not= 2$}\\
+			& \multicolumn{5}{|l|}{$\phi_3: F_2 = 0 \to F_3 \not= 0$}\\
+			& \multicolumn{5}{|l|}{$\phi_4: F_1 = 1 \to F_3 \not= 0$}\\
+			& \multicolumn{5}{|l|}{$\phi_5: F_4 = 0 \to (F_3 \not= 2 \land F_1 \not= 2)$}\\
+			& \multicolumn{5}{|l|}{$\phi_6: F_5 = 0 \to F_4 = 0$}\\
+			& \multicolumn{5}{|l|}{$\phi_7: \neg(F_1 = 0 \land F_2 = 1 \land F_3 = 0)$}\\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[tb]
+	\caption{無効なインタラクション}
+	\label{InvalidInteractions}
+	\begin{center}
+		\begin{tabular}{|l|}
+			\hline
+			$((\sigma(F_1, 2), (\sigma(F_2, 0))$ \\
+			$((\sigma(F_1, 1), (\sigma(F_3, 0))$ \\
+			$((\sigma(F_1, 2), (\sigma(F_3, 0))$ \\
+			$((\sigma(F_1, 2), (\sigma(F_4, 0))$ \\
+			$((\sigma(F_1, 2), (\sigma(F_5, 0))$ \\
+			$((\sigma(F_2, 0), (\sigma(F_3, 0))$ \\
+			$((\sigma(F_2, 1), (\sigma(F_3, 0))$ \\
+			$((\sigma(F_3, 2), (\sigma(F_4, 0))$ \\
+			$((\sigma(F_3, 2), (\sigma(F_5, 0))$ \\
+			$((\sigma(F_4, 1), (\sigma(F_5, 0))$ \\  
+			\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\begin{table}[tb]
+	\caption{区別不可能なインタラクションペア}
+	\label{IndisPairs}
+	\begin{center}
+		\begin{tabular}{|l|}
+			\hline
+			$((\sigma(F_1, 0), (\sigma(F_3, 0))\ \sim\ ((\sigma(F_2, 2), (\sigma(F_3, 0))$ \\ 
+			$((\sigma(F_1, 2), (\sigma(F_4, 1))\ \sim\ ((\sigma(F_1, 2), (\sigma(F_5, 1))$ \\
+			$((\sigma(F_3, 2), (\sigma(F_4, 1))\ \sim\ ((\sigma(F_3, 2), (\sigma(F_5, 1))$ \\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+実用例として，\cite{eg:phone}に現れた携帯電話の例を利用する．SUTモデルは表\ref{sut:mobil}に示されている，$|{\cal F}| = 5, |{\cal S}| = 3^3 2^2, |\phi| = 7$．これらをもとに，{\bfseries \ref{subsec:concept}}で記述した順にインタラクションの有効性及びインタラクション間の区別可能性を確かめていく．
+
+システムパラメータの値集合$\cal S$に対し，すべての2-wayインタラクションの集合を${\cal I}_2$とする．そして，制約$\cal \phi$から得られるすべてのVIを${\cal VI}_2$と示す．システム制約$\phi$による無効なインタラクションを表{\bfseries \ref{InvalidInteractions}}にて示す．${\cal VI}_2$に対して，IPは表{\bfseries \ref{IndisPairs}}のように得られる，これらを取り除き，残りのインタラクションペアを少なくとも一つのテストケースにおいて，同時出現しないように設計することで，(1, 2)-CLAを得ることができる．表{\bfseries \ref{sut:cla}}にてその実例を示す．
+
+\begin{table}[tb]
+	\caption{SUT: (1, 2)-CLA}
+	\label{sut:cla}
+	\begin{center}
+		\begin{tabular}{|l|c c c c c|}
+			\hline
+			CLA & $F_1$ & $F_2$ & $F_3$ & $F_4$ & $F_5$ \\ \hline
+			$\sigma_1$ & 0 & 0 & 1 & 0 & 0 \\
+			$\sigma_2$ & 0 & 0 & 2 & 1 & 1 \\
+			$\sigma_3$ & 0 & 1 & 1 & 0 & 1 \\
+			$\sigma_4$ & 0 & 2 & 0 & 0 & 0 \\
+			$\sigma_5$ & 0 & 2 & 0 & 0 & 1 \\
+			$\sigma_6$ & 0 & 2 & 0 & 1 & 1 \\
+			$\sigma_7$ & 0 & 2 & 2 & 1 & 1 \\
+			$\sigma_8$ & 1 & 0 & 1 & 0 & 1 \\
+			$\sigma_9$ & 1 & 0 & 1 & 1 & 1 \\
+			$\sigma_{10}$ & 1 & 1 & 1 & 0 & 0 \\
+			$\sigma_{11}$ & 1 & 1 & 2 & 1 & 1 \\
+			$\sigma_{12}$ & 1 & 2 & 1 & 0 & 0 \\
+			$\sigma_{13}$ & 2 & 1 & 1 & 1 & 1 \\
+			$\sigma_{14}$ & 2 & 1 & 2 & 1 & 1 \\
+			$\sigma_{15}$ & 2 & 2 & 1 & 1 & 1 \\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
 \section{SMT問題への変換}
 \label{sec:SMT}
+SMT(satisfiability modulo theories)はSAT問題(satisfiability problems)に基づき，論理変数だけでなく，整数及びそれらの計算記号などをも扱える理論である．SMTソルバを利用することで，羅列した命題の充足可能な変数の値（解）を求められる．SAT/SMTソルバに関する研究はすでに捗っていて，高速に解を求めることができる．故に，SMTソルバのエンコーディングの容易さ，実行の素早さを利用することで，(1, 2)-CLAを求めることが効果的だと考えられる．本章では，{\bfseries \ref{subsec:example}}にて討論されたSUTモデルを対象にし，SMT-LIBの標準に基づき論議する．
 
 \subsection{エンコーディング}
 \label{subsec:encoding}
+SMTソルバを用いて問題を解くために，まず変数を宣言しなければならない：
+\[ {\rm (declare\mbox{\scriptsize-}const\ f1\ Int}) \]
+上記のようにSUTの5つのパラメータを定義する．パラメータの値に関しては，断言（assertion）を加えることにより,その取りうる値を制限できる：
+\[ {\rm (assert\ (and\ (>=\ f1\ 0)\ (<=\ f1\ 2))} \]
+上記の断言から観察できるが，断言はすべてポーランド記法により記述される．変数宣言を実行した後，各パラメータの値の範囲，そして制約を順次に書き出す．
 
-\subsubsection{無効インタラクション}
+入力されたすべての断言に対し，真となる解が存在するのならば，SMTソルバは「SAT」の結果を出し，各変数の値を提示する．しかし，真となる解が存在しないのならば，つまり，断言間にて矛盾が存在するのならば，SMTソルバは「UNSAT」の結果を提示する．
+
+\subsubsection{無効なインタラクション}
 \label{subsec:invalid}
+定義に基づき，無効なインタラクションはSUTモデルの固有制約$\phi$と矛盾しているため出現する．現にSMTソルバに変数の宣言，値の範囲，固有制約を入力したとする．すべての2-wayインタラクション${\cal I}_2$において，入力済みの断言と合わせ「UNSAT」の結果が出現した場合，そのインタラクションは無効だと判断できる：
+\[{\rm (assert\ (and\ (=\ f1\ 2)\ (=\ f2\ 0)))}\]
+
+すべてのインタラクションに対し，上記の断言をそれぞれ実行した結果，表{\bfseries \ref{InvalidInteractions}}の10個の無効なインタラクションを特定できる．これら無効なインタラクションの集合を${\cal I}_2$から取り除き，${\cal VI}_2$を求められる．
 
 \subsubsection{区別不能なインタラクションペア}
 \label{subsec:indistinguishable}
+${\cal VI}_2$を得た後，集合中の任意な異なる2つのインタラクション$T_1, T_2$に対し，その区別可能性を確かめる．無効なインタラクションと同様，先にSMTソルバに変数宣言，値範囲及び固有制約を入力する．定義によると，区別可能性を確かめる方法は，同じテストケースに同時に出現させないことで，それが可能であれば，両者は区別可能である．この特性から，以下のような命題を書き出せる：
+\[((F_1 = s_0) \land (F_2 = s_0)) \oplus ((F_1 = s_0) \land (F_3 = s_0))\]
+上記の命題をSMT-LIB標準に基づき，書き換える：
+\begin{eqnarray}
+{\rm (assert\ (xor}&{\rm (and\ (=\ f1\ 0)\ (=\ f2\ 0))\ } \nonumber \\
+ &{\rm \ (and\ (=\ f1\ 0)\ (=\ f3\ 0))))} \nonumber
+\end{eqnarray}
+この式をすべての${\cal VI}_2$ペアに応用する．「UNSAT」の結果を出すペアはIPである．これらを取り除き，残りのペアは区別可能のペアである，${\cal DP}$と記す．
+\subsubsection{テストスイート構成}
+\label{subsec:suiteconstruct}
 
-
-\subsection{Synmmetry Breaking}
+\subsection{Symmetry Breaking}
 \label{subsec:symmetry}
 
 \section{実験・評価}
@@ -228,83 +337,9 @@ O'Reilly \& Associates, Sebastopol, 1994.
 D. Salomon, The Advanced \TeX\ book,
 Springer-Verlag, New York, 1995.
 
-\bibitem{hujita2}
-藤田眞作，\LaTeX\ マクロの八衢，
-アジソン・ウェスレイ・パブリッシャーズ・ジャパン，東京，1995.
+\bibitem{eg:phone}
+phone example
 
-\bibitem{Nakano}
-中野賢，日本語 \LaTeXe\ ブック，
-アスキー出版局，東京，1996.
-
-\bibitem{Fujita4}
-藤田眞作，\LaTeXe\ 階梯，
-アジソン・ウェスレイ・パブリッシャーズ・ジャパン，東京，1996.
-
-\bibitem{otobe}
-乙部巌己，江口庄英，
-p\LaTeXe\ for Windows\ Another Manual，
-ソフトバンク パブリッシング，東京，1996--1997.
-
-\bibitem{Abrahams}
-% P.W. Abrahams, \TeX\ for the Impatient,
-% (Addison-Wesley, 1992).
-ポール W. エイブラハム，明快 \TeX{}，
-アジソン・ウェスレイ・パブリッシャーズ・ジャパン，東京，1997.
-
-\bibitem{Eguchi}
-江口庄英，Ghostscript Another Manual，
-ソフトバンク パブリッシング，東京，1997.
-
-\bibitem{FMi1}
-% M. Goossens, F. Mittelbach, and A. Samarin, The \LaTeX\ Companion,
-% Addison-Wesley, Reading, 1994.
-マイケル・グーセンス，フランク・ミッテルバッハ，アレキサンダー・サマリン，
-\LaTeX\ コンパニオン，アスキー出版局，東京，1998.
-
-\bibitem{Eijkhout}
-% V. Eijkhout, \TeX\ by Topic, Addison-Wesley, Wokingham, 1991.
-ビクター・エイコー，\TeX\ by Topic---\TeX\ をよく深く知るための39章，
-アスキー出版局，東京，1999.
-
-\bibitem{latex}
-%レスリー ランポート，文書処理システム\LaTeX{}，
-%アスキー出版局，東京，1990.
-レスリー・ランポート，文書処理システム \LaTeXe{}，
-ピアソンエデュケーション，東京，1999.
-
-\bibitem{Okumura3}
-奥村晴彦，［改訂版］\LaTeXe\ 美文書作成入門，
-技術評論社，東京，2000.
-
-\bibitem{FMi2}
-% M. Goossens, S. Rahts, and  F. Mittelbach,
-% The \LaTeX\ Graphics Companion (Addison-Wesley, 1997).
-マイケル・グーセンス，セバスチャン・ラッツ，フランク・ミッテルバッハ，
-\LaTeX\ グラフィックスコンパニオン，アスキー出版局，東京，2000.
-
-\bibitem{FGo1}
-% M. Goossens, and S. Rahts,
-% The \LaTeX\ Web Companion, Addison-Wesley,  1999.
-マイケル・グーセンス，セバスチャン・ラッツ，
-\LaTeX\ Web コンパニオン---\TeX\ とHTML/XML の統合，
-アスキー出版局，東京，2001.
-
-\bibitem{PEn}
-ページ・エンタープライゼス\<（株）\<，
-\LaTeXe\ マクロ \& クラスプログラミング基礎解説，
-技術評論社，東京，2002.
-
-\bibitem{Fujita5}
-藤田眞作，\LaTeXe\ コマンドブック，
-ソフトバンク パブリッシング，東京，2003.
-
-\bibitem{Yoshinaga}
-吉永徹美，
-\LaTeXe\ マクロ \& クラスプログラミング実践解説，
-技術評論社，東京，2003.
-
-\bibitem{texwiki}
-https://oku.edu.mie-u.ac.jp/\~{}okumura/texwiki/
 \end{thebibliography}
 
 \appendix
