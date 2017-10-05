@@ -12,7 +12,7 @@ typedef struct Dis_Pair{
 
     Valid_Interaction dis_interaction;//dis between dis_interaction and codomain_set;
     int Type_Set_Domain;
-    int Ttpe_Set_Codomain;
+    int Type_Set_Codomain;
 
     struct Dis_Pair* next;
 

@@ -216,617 +216,936 @@ int Array_Construction(type_t int_type, context_t* ctx, term_t* parameters, stru
     term_t and_phrase_dis = 0;
     term_t or_phrase_dis = 0;
 
+
+//    while(current_pair != NULL){
+//        for(int i = 0; i < test_case_num; i++) {
+//
+//            if (i == 0) {
+//
+//                if (current_pair->Type_Set_Codomain == 1) {//d == 1
+//
+//                    if (current_pair->codomain_set.Interaction_1.interaction_type == 1) {//d == 1 && t == 1
+//
+//                        if (current_pair->dis_interaction.interaction_type == 1) {
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                        yices_int32(current_pair->dis_interaction.v1)),
+//                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
+//                                                        yices_int32(current_pair->codomain_set.Interaction_1.v1)));
+//                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
+//                                                      xor_phrase_dis);
+//
+//                        } else if (current_pair->dis_interaction.interaction_type == 2) {
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v1)),
+//                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v2))),
+//                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
+//                                                        yices_int32(current_pair->codomain_set.Interaction_1.v1)));
+//                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
+//                                                      xor_phrase_dis);
+//
+//                        }
+//
+//                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2) {//d == 1 && t == 2
+//
+//                        if (current_pair->dis_interaction.interaction_type == 1) {
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                        yices_int32(current_pair->dis_interaction.v1)),
+//                                    yices_and2(yices_arith_eq_atom(
+//                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
+//                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+//                                               yices_arith_eq_atom(
+//                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
+//                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
+//                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
+//                                                      xor_phrase_dis);
+//
+//                        } else if (current_pair->dis_interaction.interaction_type == 2) {
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v1)),
+//                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v2))),
+//                                    yices_and2(yices_arith_eq_atom(
+//                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
+//                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+//                                               yices_arith_eq_atom(
+//                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
+//                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
+//                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
+//                                                      xor_phrase_dis);
+//
+//                        }
+//
+//                    }
+//
+//                } else if (current_pair->Type_Set_Codomain == 2) {//d == 2
+//
+//                    if (current_pair->codomain_set.Interaction_1.interaction_type == 1 &&
+//                        current_pair->codomain_set.Interaction_2.interaction_type == 1) {
+//
+//                        if (current_pair->dis_interaction.interaction_type == 1) {
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                        yices_int32(current_pair->dis_interaction.v1)),
+//                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
+//                                                        yices_int32(current_pair->codomain_set.Interaction_1.v1)));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                        yices_int32(current_pair->dis_interaction.v1)),
+//                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
+//                                                        yices_int32(current_pair->codomain_set.Interaction_2.v1)));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
+//                                                      and_phrase_dis);
+//
+//                        } else if (current_pair->dis_interaction.interaction_type == 2) {
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v1)),
+//                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v2))),
+//                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
+//                                                        yices_int32(current_pair->codomain_set.Interaction_1.v1)));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v1)),
+//                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v2))),
+//                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
+//                                                        yices_int32(current_pair->codomain_set.Interaction_2.v1)));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
+//                                                      and_phrase_dis);
+//
+//                        }
+//
+//                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2 &&
+//                               current_pair->codomain_set.Interaction_2.interaction_type == 1) {
+//
+//                        if (current_pair->dis_interaction.interaction_type == 1) {
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                        yices_int32(current_pair->dis_interaction.v1)),
+//                                    yices_and2(yices_arith_eq_atom(
+//                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
+//                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+//                                               yices_arith_eq_atom(
+//                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
+//                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                        yices_int32(current_pair->dis_interaction.v1)),
+//                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
+//                                                        yices_int32(current_pair->codomain_set.Interaction_2.v1)));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
+//                                                      and_phrase_dis);
+//
+//                        } else if (current_pair->dis_interaction.interaction_type == 2) {
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v1)),
+//                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v2))),
+//                                    yices_and2(yices_arith_eq_atom(
+//                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
+//                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+//                                               yices_arith_eq_atom(
+//                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
+//                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v1)),
+//                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v2))),
+//                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
+//                                                        yices_int32(current_pair->codomain_set.Interaction_2.v1)));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
+//                                                      and_phrase_dis);
+//
+//                        }
+//
+//                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2 &&
+//                               current_pair->codomain_set.Interaction_2.interaction_type == 2) {
+//
+//                        if (current_pair->dis_interaction.interaction_type == 1) {
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                        yices_int32(current_pair->dis_interaction.v1)),
+//                                    yices_and2(yices_arith_eq_atom(
+//                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
+//                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+//                                               yices_arith_eq_atom(
+//                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
+//                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                        yices_int32(current_pair->dis_interaction.v1)),
+//                                    yices_and2(yices_arith_eq_atom(
+//                                            parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
+//                                            yices_int32(current_pair->codomain_set.Interaction_2.v1)),
+//                                               yices_arith_eq_atom(
+//                                                       parameters[current_pair->codomain_set.Interaction_2.p2 - 1],
+//                                                       yices_int32(current_pair->codomain_set.Interaction_2.v2))));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
+//                                                      and_phrase_dis);
+//
+//                        } else if (current_pair->dis_interaction.interaction_type == 2) {
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v1)),
+//                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v2))),
+//                                    yices_and2(yices_arith_eq_atom(
+//                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
+//                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+//                                               yices_arith_eq_atom(
+//                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
+//                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(
+//                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v1)),
+//                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
+//                                                                   yices_int32(current_pair->dis_interaction.v2))),
+//                                    yices_and2(yices_arith_eq_atom(
+//                                            parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
+//                                            yices_int32(current_pair->codomain_set.Interaction_2.v1)),
+//                                               yices_arith_eq_atom(
+//                                                       parameters[current_pair->codomain_set.Interaction_2.p2 - 1],
+//                                                       yices_int32(current_pair->codomain_set.Interaction_2.v2))));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
+//                                                      and_phrase_dis);
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            } else {//i != 0
+//
+//                if (current_pair->Type_Set_Codomain == 1) {
+//
+//                    if (current_pair->codomain_set.Interaction_1.interaction_type == 1) {//d == 1 && t == 1
+//
+//                        if (current_pair->dis_interaction.interaction_type == 1) {
+//
+//                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
+//                                                                                    current_pair->codomain_set.Interaction_1.p1 -
+//                                                                                    1],
+//                                                                            yices_int32(
+//                                                                                    current_pair->codomain_set.Interaction_1.v1)));
+//                            or_phrase_dis = yices_or2(or_phrase_dis, xor_phrase_dis);
+//
+//                        } else if (current_pair->dis_interaction.interaction_type == 2) {
+//
+//                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->dis_interaction.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->dis_interaction.v2))),
+//                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
+//                                                                                    current_pair->codomain_set.Interaction_1.p1 -
+//                                                                                    1],
+//                                                                            yices_int32(
+//                                                                                    current_pair->codomain_set.Interaction_1.v1)));
+//                            or_phrase_dis = yices_or2(or_phrase_dis, xor_phrase_dis);
+//
+//                        }
+//
+//                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2) {//d == 1 && t == 2
+//
+//                        if (current_pair->dis_interaction.interaction_type == 1) {
+//
+//                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                        yices_and2(yices_arith_eq_atom(
+//                                                                (*parameters_additional_pointer)[i - 1][
+//                                                                        current_pair->codomain_set.Interaction_1.p1 -
+//                                                                        1],
+//                                                                yices_int32(
+//                                                                        current_pair->codomain_set.Interaction_1.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->codomain_set.Interaction_1.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->codomain_set.Interaction_1.v2))));
+//                            or_phrase_dis = yices_or2(or_phrase_dis, xor_phrase_dis);
+//
+//                        } else if (current_pair->dis_interaction.interaction_type == 2) {
+//
+//                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->dis_interaction.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->dis_interaction.v2))),
+//                                                        yices_and2(yices_arith_eq_atom(
+//                                                                (*parameters_additional_pointer)[i - 1][
+//                                                                        current_pair->codomain_set.Interaction_1.p1 -
+//                                                                        1],
+//                                                                yices_int32(
+//                                                                        current_pair->codomain_set.Interaction_1.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->codomain_set.Interaction_1.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->codomain_set.Interaction_1.v2))));
+//                            or_phrase_dis = yices_or2(or_phrase_dis, xor_phrase_dis);
+//
+//                        }
+//
+//                    }
+//
+//                } else if (current_pair->Type_Set_Codomain == 2) {
+//
+//                    if (current_pair->codomain_set.Interaction_1.interaction_type == 1 &&
+//                        current_pair->codomain_set.Interaction_2.interaction_type == 1) {
+//
+//                        if (current_pair->dis_interaction.interaction_type == 1) {
+//
+//                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
+//                                                                                    current_pair->codomain_set.Interaction_1.p1 -
+//                                                                                    1],
+//                                                                            yices_int32(
+//                                                                                    current_pair->codomain_set.Interaction_1.v1)));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
+//                                                                                    current_pair->codomain_set.Interaction_2.p1 -
+//                                                                                    1],
+//                                                                            yices_int32(
+//                                                                                    current_pair->codomain_set.Interaction_2.v1)));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
+//
+//                        } else if (current_pair->dis_interaction.interaction_type == 2) {
+//
+//                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->dis_interaction.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->dis_interaction.v2))),
+//                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
+//                                                                                    current_pair->codomain_set.Interaction_1.p1 -
+//                                                                                    1],
+//                                                                            yices_int32(
+//                                                                                    current_pair->codomain_set.Interaction_1.v1)));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->dis_interaction.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->dis_interaction.v2))),
+//                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
+//                                                                                    current_pair->codomain_set.Interaction_2.p1 -
+//                                                                                    1],
+//                                                                            yices_int32(
+//                                                                                    current_pair->codomain_set.Interaction_2.v1)));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
+//                        }
+//
+//                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2 &&
+//                               current_pair->codomain_set.Interaction_2.interaction_type == 1) {
+//
+//                        if (current_pair->dis_interaction.interaction_type == 1) {
+//
+//                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                        yices_and2(yices_arith_eq_atom(
+//                                                                (*parameters_additional_pointer)[i - 1][
+//                                                                        current_pair->codomain_set.Interaction_1.p1 -
+//                                                                        1],
+//                                                                yices_int32(
+//                                                                        current_pair->codomain_set.Interaction_1.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->codomain_set.Interaction_1.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->codomain_set.Interaction_1.v2))));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
+//                                                                                    current_pair->codomain_set.Interaction_2.p1 -
+//                                                                                    1],
+//                                                                            yices_int32(
+//                                                                                    current_pair->codomain_set.Interaction_2.v1)));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
+//
+//                        } else if (current_pair->dis_interaction.interaction_type == 2) {
+//
+//                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->dis_interaction.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->dis_interaction.v2))),
+//                                                        yices_and2(yices_arith_eq_atom(
+//                                                                (*parameters_additional_pointer)[i - 1][
+//                                                                        current_pair->codomain_set.Interaction_1.p1 -
+//                                                                        1],
+//                                                                yices_int32(
+//                                                                        current_pair->codomain_set.Interaction_1.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->codomain_set.Interaction_1.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->codomain_set.Interaction_1.v2))));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->dis_interaction.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->dis_interaction.v2))),
+//                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
+//                                                                                    current_pair->codomain_set.Interaction_2.p1 -
+//                                                                                    1],
+//                                                                            yices_int32(
+//                                                                                    current_pair->codomain_set.Interaction_2.v1)));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
+//
+//                        }
+//
+//                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2 &&
+//                               current_pair->codomain_set.Interaction_2.interaction_type == 2) {
+//
+//                        if (current_pair->dis_interaction.interaction_type == 1) {
+//
+//                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                        yices_and2(yices_arith_eq_atom(
+//                                                                (*parameters_additional_pointer)[i - 1][
+//                                                                        current_pair->codomain_set.Interaction_1.p1 -
+//                                                                        1],
+//                                                                yices_int32(
+//                                                                        current_pair->codomain_set.Interaction_1.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->codomain_set.Interaction_1.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->codomain_set.Interaction_1.v2))));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                        yices_and2(yices_arith_eq_atom(
+//                                                                (*parameters_additional_pointer)[i - 1][
+//                                                                        current_pair->codomain_set.Interaction_2.p1 -
+//                                                                        1],
+//                                                                yices_int32(
+//                                                                        current_pair->codomain_set.Interaction_2.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->codomain_set.Interaction_2.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->codomain_set.Interaction_2.v2))));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
+//
+//                        } else if (current_pair->dis_interaction.interaction_type == 2) {
+//
+//                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->dis_interaction.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->dis_interaction.v2))),
+//                                                        yices_and2(yices_arith_eq_atom(
+//                                                                (*parameters_additional_pointer)[i - 1][
+//                                                                        current_pair->codomain_set.Interaction_1.p1 -
+//                                                                        1],
+//                                                                yices_int32(
+//                                                                        current_pair->codomain_set.Interaction_1.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->codomain_set.Interaction_1.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->codomain_set.Interaction_1.v2))));
+//
+//                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
+//                                                        xor_phrase_dis);
+//
+//                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
+//                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
+//                                    yices_int32(current_pair->dis_interaction.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->dis_interaction.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->dis_interaction.v2))),
+//                                                        yices_and2(yices_arith_eq_atom(
+//                                                                (*parameters_additional_pointer)[i - 1][
+//                                                                        current_pair->codomain_set.Interaction_2.p1 -
+//                                                                        1],
+//                                                                yices_int32(
+//                                                                        current_pair->codomain_set.Interaction_2.v1)),
+//                                                                   yices_arith_eq_atom(
+//                                                                           (*parameters_additional_pointer)[i - 1][
+//                                                                                   current_pair->codomain_set.Interaction_2.p2 -
+//                                                                                   1],
+//                                                                           yices_int32(
+//                                                                                   current_pair->codomain_set.Interaction_2.v2))));
+//
+//                            and_phrase_dis = yices_or2(and_phrase_dis, xor_phrase_dis);
+//
+//                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }
+//        yices_assert_formula(ctx, or_phrase_dis);
+
+
     while(current_pair != NULL){
 
-        for(int i = 0; i < test_case_num; i++) {
+        if(current_pair->Type_Set_Domain == 1 && current_pair->Type_Set_Codomain == 1){
 
-            if (i == 0) {
+            if(current_pair->domain_set.Interaction_1.interaction_type == 1 && current_pair->codomain_set.Interaction_1.interaction_type == 1){
 
-                if (current_pair->Ttpe_Set_Codomain == 1) {//d == 1
+                or_phrase_dis = yices_xor2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                           yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)));
+                for(int i = 0; i < test_case_num - 2; i++){
 
-                    if (current_pair->codomain_set.Interaction_1.interaction_type == 1) {//d == 1 && t == 1
-
-                        if (current_pair->dis_interaction.interaction_type == 1) {
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                        yices_int32(current_pair->dis_interaction.v1)),
-                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
-                                                        yices_int32(current_pair->codomain_set.Interaction_1.v1)));
-                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
-                                                      xor_phrase_dis);
-
-                        } else if (current_pair->dis_interaction.interaction_type == 2) {
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v1)),
-                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v2))),
-                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
-                                                        yices_int32(current_pair->codomain_set.Interaction_1.v1)));
-                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
-                                                      xor_phrase_dis);
-
-                        }
-
-                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2) {//d == 1 && t == 2
-
-                        if (current_pair->dis_interaction.interaction_type == 1) {
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                        yices_int32(current_pair->dis_interaction.v1)),
-                                    yices_and2(yices_arith_eq_atom(
-                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
-                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
-                                               yices_arith_eq_atom(
-                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
-                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
-                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
-                                                      xor_phrase_dis);
-
-                        } else if (current_pair->dis_interaction.interaction_type == 2) {
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v1)),
-                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v2))),
-                                    yices_and2(yices_arith_eq_atom(
-                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
-                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
-                                               yices_arith_eq_atom(
-                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
-                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
-                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
-                                                      xor_phrase_dis);
-
-                        }
-
-                    }
-
-                } else if (current_pair->Ttpe_Set_Codomain == 2) {//d == 2
-
-                    if (current_pair->codomain_set.Interaction_1.interaction_type == 1 &&
-                        current_pair->codomain_set.Interaction_2.interaction_type == 1) {
-
-                        if (current_pair->dis_interaction.interaction_type == 1) {
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                        yices_int32(current_pair->dis_interaction.v1)),
-                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
-                                                        yices_int32(current_pair->codomain_set.Interaction_1.v1)));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                        yices_int32(current_pair->dis_interaction.v1)),
-                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
-                                                        yices_int32(current_pair->codomain_set.Interaction_2.v1)));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
-                                                      and_phrase_dis);
-
-                        } else if (current_pair->dis_interaction.interaction_type == 2) {
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v1)),
-                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v2))),
-                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
-                                                        yices_int32(current_pair->codomain_set.Interaction_1.v1)));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v1)),
-                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v2))),
-                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
-                                                        yices_int32(current_pair->codomain_set.Interaction_2.v1)));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
-                                                      and_phrase_dis);
-
-                        }
-
-                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2 &&
-                               current_pair->codomain_set.Interaction_2.interaction_type == 1) {
-
-                        if (current_pair->dis_interaction.interaction_type == 1) {
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                        yices_int32(current_pair->dis_interaction.v1)),
-                                    yices_and2(yices_arith_eq_atom(
-                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
-                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
-                                               yices_arith_eq_atom(
-                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
-                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                        yices_int32(current_pair->dis_interaction.v1)),
-                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
-                                                        yices_int32(current_pair->codomain_set.Interaction_2.v1)));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
-                                                      and_phrase_dis);
-
-                        } else if (current_pair->dis_interaction.interaction_type == 2) {
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v1)),
-                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v2))),
-                                    yices_and2(yices_arith_eq_atom(
-                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
-                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
-                                               yices_arith_eq_atom(
-                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
-                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v1)),
-                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v2))),
-                                    yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
-                                                        yices_int32(current_pair->codomain_set.Interaction_2.v1)));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
-                                                      and_phrase_dis);
-
-                        }
-
-                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2 &&
-                               current_pair->codomain_set.Interaction_2.interaction_type == 2) {
-
-                        if (current_pair->dis_interaction.interaction_type == 1) {
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                        yices_int32(current_pair->dis_interaction.v1)),
-                                    yices_and2(yices_arith_eq_atom(
-                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
-                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
-                                               yices_arith_eq_atom(
-                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
-                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                        yices_int32(current_pair->dis_interaction.v1)),
-                                    yices_and2(yices_arith_eq_atom(
-                                            parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
-                                            yices_int32(current_pair->codomain_set.Interaction_2.v1)),
-                                               yices_arith_eq_atom(
-                                                       parameters[current_pair->codomain_set.Interaction_2.p2 - 1],
-                                                       yices_int32(current_pair->codomain_set.Interaction_2.v2))));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
-                                                      and_phrase_dis);
-
-                        } else if (current_pair->dis_interaction.interaction_type == 2) {
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v1)),
-                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v2))),
-                                    yices_and2(yices_arith_eq_atom(
-                                            parameters[current_pair->codomain_set.Interaction_1.p1 - 1],
-                                            yices_int32(current_pair->codomain_set.Interaction_1.v1)),
-                                               yices_arith_eq_atom(
-                                                       parameters[current_pair->codomain_set.Interaction_1.p2 - 1],
-                                                       yices_int32(current_pair->codomain_set.Interaction_1.v2))));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(
-                                    yices_and2(yices_arith_eq_atom(parameters[current_pair->dis_interaction.p1 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v1)),
-                                               yices_arith_eq_atom(parameters[current_pair->dis_interaction.p2 - 1],
-                                                                   yices_int32(current_pair->dis_interaction.v2))),
-                                    yices_and2(yices_arith_eq_atom(
-                                            parameters[current_pair->codomain_set.Interaction_2.p1 - 1],
-                                            yices_int32(current_pair->codomain_set.Interaction_2.v1)),
-                                               yices_arith_eq_atom(
-                                                       parameters[current_pair->codomain_set.Interaction_2.p2 - 1],
-                                                       yices_int32(current_pair->codomain_set.Interaction_2.v2))));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(yices_arith_eq_atom(yices_int32(1), yices_int32(0)),
-                                                      and_phrase_dis);
-
-                        }
-
-                    }
+                    xor_phrase_dis = yices_xor2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
 
                 }
+                yices_assert_formula(ctx, or_phrase_dis);
 
-            } else {//i != 0
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_1.interaction_type == 1){
 
-                if (current_pair->Ttpe_Set_Codomain == 1) {
+                or_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                      yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                           yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)));
+                for(int i = 0; i < test_case_num - 2; i++){
 
-                    if (current_pair->codomain_set.Interaction_1.interaction_type == 1) {//d == 1 && t == 1
-
-                        if (current_pair->dis_interaction.interaction_type == 1) {
-
-                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
-                                                                                    current_pair->codomain_set.Interaction_1.p1 -
-                                                                                    1],
-                                                                            yices_int32(
-                                                                                    current_pair->codomain_set.Interaction_1.v1)));
-                            or_phrase_dis = yices_or2(or_phrase_dis, xor_phrase_dis);
-
-                        } else if (current_pair->dis_interaction.interaction_type == 2) {
-
-                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->dis_interaction.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->dis_interaction.v2))),
-                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
-                                                                                    current_pair->codomain_set.Interaction_1.p1 -
-                                                                                    1],
-                                                                            yices_int32(
-                                                                                    current_pair->codomain_set.Interaction_1.v1)));
-                            or_phrase_dis = yices_or2(or_phrase_dis, xor_phrase_dis);
-
-                        }
-
-                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2) {//d == 1 && t == 2
-
-                        if (current_pair->dis_interaction.interaction_type == 1) {
-
-                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                        yices_and2(yices_arith_eq_atom(
-                                                                (*parameters_additional_pointer)[i - 1][
-                                                                        current_pair->codomain_set.Interaction_1.p1 -
-                                                                        1],
-                                                                yices_int32(
-                                                                        current_pair->codomain_set.Interaction_1.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->codomain_set.Interaction_1.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->codomain_set.Interaction_1.v2))));
-                            or_phrase_dis = yices_or2(or_phrase_dis, xor_phrase_dis);
-
-                        } else if (current_pair->dis_interaction.interaction_type == 2) {
-
-                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->dis_interaction.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->dis_interaction.v2))),
-                                                        yices_and2(yices_arith_eq_atom(
-                                                                (*parameters_additional_pointer)[i - 1][
-                                                                        current_pair->codomain_set.Interaction_1.p1 -
-                                                                        1],
-                                                                yices_int32(
-                                                                        current_pair->codomain_set.Interaction_1.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->codomain_set.Interaction_1.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->codomain_set.Interaction_1.v2))));
-                            or_phrase_dis = yices_or2(or_phrase_dis, xor_phrase_dis);
-
-                        }
-
-                    }
-
-                } else if (current_pair->Ttpe_Set_Codomain == 2) {
-
-                    if (current_pair->codomain_set.Interaction_1.interaction_type == 1 &&
-                        current_pair->codomain_set.Interaction_2.interaction_type == 1) {
-
-                        if (current_pair->dis_interaction.interaction_type == 1) {
-
-                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
-                                                                                    current_pair->codomain_set.Interaction_1.p1 -
-                                                                                    1],
-                                                                            yices_int32(
-                                                                                    current_pair->codomain_set.Interaction_1.v1)));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
-                                                                                    current_pair->codomain_set.Interaction_2.p1 -
-                                                                                    1],
-                                                                            yices_int32(
-                                                                                    current_pair->codomain_set.Interaction_2.v1)));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
-
-                        } else if (current_pair->dis_interaction.interaction_type == 2) {
-
-                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->dis_interaction.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->dis_interaction.v2))),
-                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
-                                                                                    current_pair->codomain_set.Interaction_1.p1 -
-                                                                                    1],
-                                                                            yices_int32(
-                                                                                    current_pair->codomain_set.Interaction_1.v1)));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->dis_interaction.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->dis_interaction.v2))),
-                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
-                                                                                    current_pair->codomain_set.Interaction_2.p1 -
-                                                                                    1],
-                                                                            yices_int32(
-                                                                                    current_pair->codomain_set.Interaction_2.v1)));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
-                        }
-
-                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2 &&
-                               current_pair->codomain_set.Interaction_2.interaction_type == 1) {
-
-                        if (current_pair->dis_interaction.interaction_type == 1) {
-
-                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                        yices_and2(yices_arith_eq_atom(
-                                                                (*parameters_additional_pointer)[i - 1][
-                                                                        current_pair->codomain_set.Interaction_1.p1 -
-                                                                        1],
-                                                                yices_int32(
-                                                                        current_pair->codomain_set.Interaction_1.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->codomain_set.Interaction_1.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->codomain_set.Interaction_1.v2))));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
-                                                                                    current_pair->codomain_set.Interaction_2.p1 -
-                                                                                    1],
-                                                                            yices_int32(
-                                                                                    current_pair->codomain_set.Interaction_2.v1)));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
-
-                        } else if (current_pair->dis_interaction.interaction_type == 2) {
-
-                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->dis_interaction.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->dis_interaction.v2))),
-                                                        yices_and2(yices_arith_eq_atom(
-                                                                (*parameters_additional_pointer)[i - 1][
-                                                                        current_pair->codomain_set.Interaction_1.p1 -
-                                                                        1],
-                                                                yices_int32(
-                                                                        current_pair->codomain_set.Interaction_1.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->codomain_set.Interaction_1.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->codomain_set.Interaction_1.v2))));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->dis_interaction.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->dis_interaction.v2))),
-                                                        yices_arith_eq_atom((*parameters_additional_pointer)[i - 1][
-                                                                                    current_pair->codomain_set.Interaction_2.p1 -
-                                                                                    1],
-                                                                            yices_int32(
-                                                                                    current_pair->codomain_set.Interaction_2.v1)));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
-
-                        }
-
-                    } else if (current_pair->codomain_set.Interaction_1.interaction_type == 2 &&
-                               current_pair->codomain_set.Interaction_2.interaction_type == 2) {
-
-                        if (current_pair->dis_interaction.interaction_type == 1) {
-
-                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                        yices_and2(yices_arith_eq_atom(
-                                                                (*parameters_additional_pointer)[i - 1][
-                                                                        current_pair->codomain_set.Interaction_1.p1 -
-                                                                        1],
-                                                                yices_int32(
-                                                                        current_pair->codomain_set.Interaction_1.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->codomain_set.Interaction_1.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->codomain_set.Interaction_1.v2))));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                        yices_and2(yices_arith_eq_atom(
-                                                                (*parameters_additional_pointer)[i - 1][
-                                                                        current_pair->codomain_set.Interaction_2.p1 -
-                                                                        1],
-                                                                yices_int32(
-                                                                        current_pair->codomain_set.Interaction_2.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->codomain_set.Interaction_2.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->codomain_set.Interaction_2.v2))));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
-
-                        } else if (current_pair->dis_interaction.interaction_type == 2) {
-
-                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->dis_interaction.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->dis_interaction.v2))),
-                                                        yices_and2(yices_arith_eq_atom(
-                                                                (*parameters_additional_pointer)[i - 1][
-                                                                        current_pair->codomain_set.Interaction_1.p1 -
-                                                                        1],
-                                                                yices_int32(
-                                                                        current_pair->codomain_set.Interaction_1.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->codomain_set.Interaction_1.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->codomain_set.Interaction_1.v2))));
-
-                            and_phrase_dis = yices_and2(yices_arith_eq_atom(yices_int32(0), yices_int32(0)),
-                                                        xor_phrase_dis);
-
-                            xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(
-                                    (*parameters_additional_pointer)[i - 1][current_pair->dis_interaction.p1 - 1],
-                                    yices_int32(current_pair->dis_interaction.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->dis_interaction.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->dis_interaction.v2))),
-                                                        yices_and2(yices_arith_eq_atom(
-                                                                (*parameters_additional_pointer)[i - 1][
-                                                                        current_pair->codomain_set.Interaction_2.p1 -
-                                                                        1],
-                                                                yices_int32(
-                                                                        current_pair->codomain_set.Interaction_2.v1)),
-                                                                   yices_arith_eq_atom(
-                                                                           (*parameters_additional_pointer)[i - 1][
-                                                                                   current_pair->codomain_set.Interaction_2.p2 -
-                                                                                   1],
-                                                                           yices_int32(
-                                                                                   current_pair->codomain_set.Interaction_2.v2))));
-
-                            and_phrase_dis = yices_and2(and_phrase_dis, xor_phrase_dis);
-
-                            or_phrase_dis = yices_or2(or_phrase_dis, and_phrase_dis);
-
-                        }
-
-                    }
+                    xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                           yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
 
                 }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_1.interaction_type == 2){
+
+                or_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                      yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                           yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                      yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                           yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                           yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }
+
+        }else if (current_pair->Type_Set_Domain == 1 && current_pair->Type_Set_Codomain == 2){
+
+            if(current_pair->domain_set.Interaction_1.interaction_type == 1 && current_pair->codomain_set.Interaction_1.interaction_type == 1 && current_pair->codomain_set.Interaction_2.interaction_type == 1){
+
+                or_phrase_dis = yices_xor2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                           yices_or2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                     yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                yices_or2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 1 && current_pair->codomain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_2.interaction_type == 1){
+
+                or_phrase_dis = yices_xor2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                           yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                     yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 1 && current_pair->codomain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_2.interaction_type == 2){
+
+                or_phrase_dis = yices_xor2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                           yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                     yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v2)))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                          yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v2)))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_1.interaction_type == 1 && current_pair->codomain_set.Interaction_2.interaction_type == 1){
+
+                or_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                      yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                           yices_or2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                     yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                           yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                yices_or2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_2.interaction_type == 1){
+
+                or_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                      yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                           yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                     yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                           yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_2.interaction_type == 2){
+
+                or_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                      yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                           yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                     yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v2)))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                           yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                          yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v2)))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }
+
+        }else if(current_pair->Type_Set_Domain == 2 && current_pair->Type_Set_Codomain == 2){
+
+            if(current_pair->domain_set.Interaction_1.interaction_type == 1 && current_pair->domain_set.Interaction_2.interaction_type == 1 && current_pair->codomain_set.Interaction_1.interaction_type == 1 && current_pair->codomain_set.Interaction_2.interaction_type == 1){
+
+                or_phrase_dis = yices_xor2(yices_or2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                     yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1))),
+                                           yices_or2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                     yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_or2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1))),
+                                                yices_or2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->domain_set.Interaction_2.interaction_type == 1 && current_pair->codomain_set.Interaction_1.interaction_type == 1 && current_pair->codomain_set.Interaction_2.interaction_type == 1){
+
+                or_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                     yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1))),
+                                           yices_or2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                     yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1))),
+                                                yices_or2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->domain_set.Interaction_2.interaction_type == 1 && current_pair->codomain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_2.interaction_type == 1){
+
+                or_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                     yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1))),
+                                           yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                     yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1))),
+                                                yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->domain_set.Interaction_2.interaction_type == 1 && current_pair->codomain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_2.interaction_type == 2){
+
+                or_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                     yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1))),
+                                           yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                     yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v2)))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1))),
+                                                yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                          yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v2)))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->domain_set.Interaction_2.interaction_type == 2 && current_pair->codomain_set.Interaction_1.interaction_type == 1 && current_pair->codomain_set.Interaction_2.interaction_type == 1){
+
+                or_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                     yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_2.p2 - 1], yices_int32(current_pair->domain_set.Interaction_2.v2)))),
+                                           yices_or2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                     yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                          yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_2.p2 - 1], yices_int32(current_pair->domain_set.Interaction_2.v2)))),
+                                                yices_or2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->domain_set.Interaction_2.interaction_type == 2 && current_pair->codomain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_2.interaction_type == 1){
+
+                or_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                     yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_2.p2 - 1], yices_int32(current_pair->domain_set.Interaction_2.v2)))),
+                                           yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                     yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                          yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_2.p2 - 1], yices_int32(current_pair->domain_set.Interaction_2.v2)))),
+                                                yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                          yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
+
+            }else if(current_pair->domain_set.Interaction_1.interaction_type == 2 && current_pair->domain_set.Interaction_2.interaction_type == 2 && current_pair->codomain_set.Interaction_1.interaction_type == 2 && current_pair->codomain_set.Interaction_2.interaction_type == 2){
+
+                or_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                     yices_and2(yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->domain_set.Interaction_2.p2 - 1], yices_int32(current_pair->domain_set.Interaction_2.v2)))),
+                                           yices_or2(yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                     yices_and2(yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1)),
+                                                                yices_arith_eq_atom(parameters[current_pair->codomain_set.Interaction_2.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v2)))));
+                for(int i = 0; i < test_case_num - 2; i++){
+
+                    xor_phrase_dis = yices_xor2(yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p1 - 1], yices_int32(current_pair->domain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_1.p2 - 1], yices_int32(current_pair->domain_set.Interaction_1.v2))),
+                                                          yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_2.p1 - 1], yices_int32(current_pair->domain_set.Interaction_2.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->domain_set.Interaction_2.p2 - 1], yices_int32(current_pair->domain_set.Interaction_2.v2)))),
+                                                yices_or2(yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_1.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_1.v2))),
+                                                          yices_and2(yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p1 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v1)),
+                                                                     yices_arith_eq_atom((*parameters_additional_pointer)[i][current_pair->codomain_set.Interaction_2.p2 - 1], yices_int32(current_pair->codomain_set.Interaction_2.v2)))));
+                    or_phrase_dis = yices_or2(xor_phrase_dis, or_phrase_dis);
+
+                }
+                yices_assert_formula(ctx, or_phrase_dis);
 
             }
 
         }
-        yices_assert_formula(ctx, or_phrase_dis);
 
         current_pair = current_pair->next;
 

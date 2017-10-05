@@ -15,10 +15,10 @@ struct Interaction_Set* Generate_Set(struct Valid_Interaction* valid_head){
     struct Valid_Interaction* interaction_left = valid_head;
     struct Valid_Interaction* interaction_right = NULL;
     struct Valid_Interaction null_interaction;
-    null_interaction.p1 = 0;
-    null_interaction.p2 = 0;
-    null_interaction.v1 = 0;
-    null_interaction.v2 = 0;
+    null_interaction.p1 = 6;
+    null_interaction.p2 = 6;
+    null_interaction.v1 = 6;
+    null_interaction.v2 = 6;
     null_interaction.interaction_type = -1;
     null_interaction.next = NULL;
 
@@ -65,7 +65,7 @@ struct Interaction_Set* Generate_Set(struct Valid_Interaction* valid_head){
                               (interaction_left->p2 == interaction_right->p1 && interaction_left->v2 == interaction_right->v1);
             int check_total = check_type && check_value;
 
-            if(check_total){   //check for dependency
+            if(!check_total){   //check for dependency->independent
 
                 current_set->next = (Interaction_Set*)malloc(sizeof(struct Interaction_Set));
                 current_set->next->Interaction_1 = *interaction_left;
@@ -83,8 +83,8 @@ struct Interaction_Set* Generate_Set(struct Valid_Interaction* valid_head){
                 printf("T1.p1=%d, T1.v1=%d\n", interaction_left->p1, interaction_left->v1);
                 printf("T1.p2=%d, T1.v2=%d\n", interaction_left->p2, interaction_left->v2);
                 printf("\n");
-                printf("T2.p1=%d, T2.v1=%d\n", interaction_right->p1, interaction_right->v2);
-                printf("\nare independent\n");
+                printf("T2.p1=%d, T2.v1=%d\n", interaction_right->p1, interaction_right->v1);
+                printf("\nare dependent\n");
                 printf("##################################################\n");
 
             }
